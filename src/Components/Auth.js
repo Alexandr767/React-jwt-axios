@@ -1,5 +1,8 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+// import {Redirect} from 'react-router-dom';
+
+
 
 class FormAuth extends Component {
     constructor(props){
@@ -7,12 +10,13 @@ class FormAuth extends Component {
         this.state = {
             username: '',
             password: '',
-            is_authorization: false,
+            is_logged: false,
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
- 
+    
+    
     handleChange(event) {
         const target = event.target;
         const value = target.value;
@@ -35,29 +39,34 @@ class FormAuth extends Component {
                 username: this.state.username,
                 password: this.state.password
             },
-            // responseType: JSON,
-            // console: (response)=>{ console.log(response)},
         })
-            .then(res=> {
-                console.log(res);
-                console.log(res.data);
-                if(res.data.status>=200 && res.data.status<300){
-                    localStorage.setItem('resfresh_token', res.data.refresh);
-                    localStorage.setItem('access_token', res.data.access);
-                    localStorage.setItem('username', res.data.username);
-                    localStorage.setItem('client_id', res.data.client_id);
-                }
-                else{
-                    
-                }
-                
+        .then(res=> {
+            
+        
+            localStorage.setItem('resfresh_token', res.data.refresh);
+            localStorage.setItem('access_token', res.data.access);
+            localStorage.setItem('username', res.data.username);
+            localStorage.setItem('client_id', res.data.client_id);
+            this.setState({
+                is_logged: true,
             })
+            
+            console.log(res);
+            console.log(res.data);
+            console.log(this.state.is_logged);
+        })
+            .catch(function (error) {
+                // handle error
+                localStorage.clear();
+                console.log(error);
+              })
     }
 
 
 
 
     render(){
+        
         return(
             <div className="row justify-content-center">
                 <div className="col-5">
